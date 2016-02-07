@@ -21,6 +21,8 @@ count=0;
 mylevel=1;
 blankcol=0;
 hardcol=0;
+blanktile;
+hardtile;
 hardmap=0;
 pixelcolor=0;
 canvass=0;
@@ -84,6 +86,8 @@ Begin
     mapsizey=64*10*screensdeep;
     canvass=new_map(mapsizex,mapsizey,mapsizex/2,mapsizey/2,0);
     hardmap=new_map(mapsizex/2,mapsizey/2,mapsizex/4,mapsizey/4,0);
+    blanktile=new_map(64,64,32,32,1);
+    hardtile=new_map(64,64,32,32,7);
     define_region(1, 0, 0, 800, 600);
     start_scroll(0,0,canvass,0,1,0);
     cursorid=cursor();
@@ -93,12 +97,13 @@ Begin
     write(font1,0,120,0, currentvalue);
     //write_int(0,0,160,0, pdist);
     //ctype=c_scroll;
-    loop
+    Repeat
         //mouse.graph=2;
         roll_palette(16, 23, 1);
         //roll_palette(208, 215, 1);
         frame(25);
-    end
+    until(KEY(_Q))
+    Let_Me_Alone();
 end
 //
 process cursor()
@@ -119,7 +124,7 @@ Begin
     y=mheight;
     graph=2;
     tick=0;
-    blankcol=map_get_pixel(file1,3,1,1);
+    blankcol=map_get_pixel(file1,hardtile,1,1);
     loop
         graph=currentgraph;
         cursx = "Cursor X/Y (" + itoa(x) + "," + itoa(y) + ").";
@@ -243,8 +248,8 @@ Begin
                         delete[n].state=1;
                         switch(gmod)
                             case 0;
-                                map_xput(file1,canvass,3,x,y,0,100,0);
-                                map_xput(file1,hardmap,3,x/2,y/2,0,50,0);
+                                map_xput(file1,canvass,blanktile,x,y,0,100,0);
+                                map_xput(file1,hardmap,blanktile,x/2,y/2,0,50,0);
                                 level.tiles[n].xpos=0;
                                 level.tiles[n].ypos=0;
                                 level.tiles[n].gfx=0;
@@ -402,7 +407,7 @@ Process mapput(x,y,gfx)
 begin
     z=512;
     map_xput(file1,canvass,gfx,x,y,0,100,0);
-    map_xput(file1,hardmap,5,x/2,y/2,0,50,0);
+    map_xput(file1,hardmap,hardtile,x/2,y/2,0,50,0);
 end
 //
 process choose()
